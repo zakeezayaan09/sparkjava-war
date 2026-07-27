@@ -1,5 +1,7 @@
 pipeline {
+
     agent any
+
     environment {
         PATH = "/opt/maven/bin:$PATH"
     }
@@ -8,31 +10,46 @@ pipeline {
 
         stage("build") {
             steps {
-                sh 'mvn clean install'
-                //sh 'mvn clean deploy'
+                echo "----------- build started ---------"
+
+                sh 'mvn clean deploy -Dmaven.test.skip=true'
+
+                echo "----------- build completed ---------"
+
             }
 
         }
 
-        stage('SonarQube analysis') {
-	    //when {
-            //    expression { return false } // Skips this stage completely
-            //}
-            environment {
-                scannerHome = tool 'zakdemy-sonar-scanner'
-
-
-            }
-
+        stage("test") {
             steps {
-                withSonarQubeEnv('zakdemy-sonarqube-server') {
+                echo "----------- unit test started ----------"
 
-                    sh "${scannerHome}/bin/sonar-scanner"
+                sh 'mvn surefire-report:report'
 
-                }
-            }
-        }
+                echo "---------- unit test completed ---------"
 
-    }
+             }
+
+         }
+
+         stage('SonarQube analysis') {
+             environment {
+                 scannerHome = tool 'zakdemy-sonarqube-scanner'
+
+
+             }
+
+             steps {
+                 withSonarQubeEnv('zakdemy-sonarqube-server') {
+
+                      sh "${scannerHome}/bin/sonar-scanner"
+
+                 }
+
+             }
+
+         }
+
+     }
 
 }
