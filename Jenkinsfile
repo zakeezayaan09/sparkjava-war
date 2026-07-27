@@ -36,7 +36,7 @@ pipeline {
 
          stage('SonarQube analysis') {
              environment {
-                 scannerHome = tool 'zakdemy-sonarqube-scanner'
+                 scannerHome = tool 'zakdemy-sonar-scanner'
 
 
              }
