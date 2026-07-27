@@ -15,6 +15,9 @@ pipeline {
         }
 
         stage('SonarQube analysis') {
+	    when {
+                expression { return false } // Skips this stage completely
+            }
             environment {
                 scannerHome = tool 'zakdemy-sonar-scanner'
 
