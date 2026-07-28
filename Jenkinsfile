@@ -12,7 +12,8 @@ pipeline {
             steps {
                 echo "----------- build started ---------"
 
-                sh 'mvn clean deploy -Dmaven.test.skip=true'
+
+                    sh 'mvn clean install -Dmaven.test.skip=true'
 
                 echo "----------- build completed ---------"
 
@@ -24,7 +25,7 @@ pipeline {
             steps {
                 echo "----------- unit test started ----------"
 
-                sh 'mvn surefire-report:report'
+                    sh 'mvn surefire-report:report'
 
                 echo "---------- unit test completed ---------"
 
@@ -34,7 +35,7 @@ pipeline {
 
          stage('SonarQube analysis') {
              environment {
-                 scannerHome = tool 'zakdemy-sonarqube-scanner'
+                 scannerHome = tool 'zakdemy-sonar-scanner'
 
 
              }
@@ -53,3 +54,4 @@ pipeline {
      }
 
 }
+
