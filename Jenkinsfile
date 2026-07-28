@@ -55,3 +55,27 @@ pipeline {
 
 }
 
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                // Example Maven build command
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Stage JAR File') {
+            steps {
+                sh '''
+                    # 1. Create the jarstaging directory
+                    mkdir -p jarstaging
+
+                    # 2. Copy the compiled JAR file from target into jarstaging
+                    cp target/*.jar jarstaging/
+                '''
+            }
+        }
+    }
+}
