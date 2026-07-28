@@ -55,3 +55,15 @@ pipeline {
      }
 
 }
+
+stage('Stage JAR') {
+    steps {
+        sh '''
+            # Create the folder in the workspace
+            mkdir -p jarstaging
+
+            # Copy the built JAR file from target into jarstaging
+            cp target/*.jar jarstaging/
+        '''
+    }
+}
