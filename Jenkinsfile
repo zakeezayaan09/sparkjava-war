@@ -12,10 +12,12 @@ pipeline {
             steps {
                 echo "----------- build started ---------"
 
-                sh 'mvn clean install -Dmaven.test.skip=true'
+                sh 'mvn clean deploy -Dmaven.test.skip=true'
 
                 echo "----------- build completed ---------"
+
             }
+
         }
 
         stage("test") {
@@ -25,37 +27,29 @@ pipeline {
                 sh 'mvn surefire-report:report'
 
                 echo "---------- unit test completed ---------"
-            }
-        }
 
-        stage("jar staging") {
-            steps {
-                echo "----------- jar staging started ----------"
+             }
 
-                sh '''
-                    # Create jarstaging directory in the workspace if it doesn't exist
-                    mkdir -p jarstaging
+         }
 
-                    # Copy built JAR file(s) from target directory into jarstaging
-                    cp target/*.jar jarstaging/
-                '''
+         stage('SonarQube analysis') {
+             environment {
+                 scannerHome = tool 'zakdemy-sonarqube-scanner'
 
-                echo "---------- jar staging completed ---------"
-            }
-        }
 
-        stage('SonarQube analysis') {
-            environment {
-                scannerHome = tool 'zakdemy-sonar-scanner'
-            }
+             }
 
-            steps {
-                withSonarQubeEnv('zakdemy-sonarqube-server') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }
-            }
-        }
+             steps {
+                 withSonarQubeEnv('zakdemy-sonarqube-server') {
 
-    }
+                      sh "${scannerHome}/bin/sonar-scanner"
+
+                 }
+
+             }
+
+         }
+
+     }
 
 }
