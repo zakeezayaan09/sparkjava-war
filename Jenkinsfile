@@ -12,9 +12,8 @@ pipeline {
             steps {
                 echo "----------- build started ---------"
 
-               // sh 'mvn clean deploy -Dmaven.test.skip=true'
-
-                  sh 'mvn clean install -Dmaven.test.skip=true'
+               
+                    sh 'mvn clean install -Dmaven.test.skip=true'
 
                 echo "----------- build completed ---------"
 
@@ -56,14 +55,3 @@ pipeline {
 
 }
 
-stage('Stage JAR') {
-    steps {
-        sh '''
-            # Create the folder in the workspace
-            mkdir -p jarstaging
-
-            # Copy the built JAR file from target into jarstaging
-            cp target/*.jar jarstaging/
-        '''
-    }
-}
